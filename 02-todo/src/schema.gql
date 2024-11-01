@@ -1,0 +1,10 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Query {
+  """Este será un mensaje de prueba"""
+  demo: String!
+  randomNumber: Float!
+  randomFromZeroTo(to: Int): Int!
+}
