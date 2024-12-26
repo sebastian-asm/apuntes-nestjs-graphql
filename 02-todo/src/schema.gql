@@ -2,9 +2,38 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Todo {
+  id: Int!
+  description: String!
+  done: Boolean!
+}
+
 type Query {
   """Este será un mensaje de prueba"""
   demo: String!
   randomNumber: Float!
   randomFromZeroTo(to: Int): Int!
+  todos: [Todo!]!
+  todo(id: Int!): Todo!
+}
+
+type Mutation {
+  createTodo(createTodoInput: CreateTodoInput!): Todo!
+  updateTodo(updateTodoInput: UpdateTodoInput!): Todo!
+  deleteTodo(id: Int!): Boolean!
+}
+
+input CreateTodoInput {
+  """Descripción de la tarea"""
+  description: String!
+}
+
+input UpdateTodoInput {
+  id: Int!
+
+  """Descripción de la tarea"""
+  description: String
+
+  """Estado de la tarea"""
+  done: Boolean
 }

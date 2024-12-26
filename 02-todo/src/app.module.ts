@@ -5,6 +5,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 
 import { DemoModule } from './demo/demo.module'
+import { TodoModule } from './todo/todo.module'
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { DemoModule } from './demo/demo.module'
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       plugins: [ApolloServerPluginLandingPageLocalDefault()]
     }),
-    DemoModule
+    DemoModule,
+    TodoModule
   ],
   controllers: [],
   providers: []

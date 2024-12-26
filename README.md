@@ -19,3 +19,6 @@ Es un lenguaje para leer y mutar data mediante APIs (Query language). Permite de
 
 - **Resolvers**: contienen las instrucciones para transformar las peticiones del cliente en datos que GraphQL pueda utilizar. Son similares a un Controller pero técnicamente son `providers`.
 - **Arguments**: información adicional que se puede enviar en las queries.
+- **Fragment**: forma para reutilizar un conjunto de campos para luego utilizarlos en mútiples consultas o mutaciones.
+- **Mutations**: queries que se utilizan para modificar la información guardada y devolver un valor.
+- **Inputs**: lo que comúnmente se llama _"body"_ en un petición REST tradicional.
