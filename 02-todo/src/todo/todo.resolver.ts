@@ -4,14 +4,15 @@ import { Todo } from './entity/todo.entity'
 import { TodoService } from './todo.service'
 import { CreateTodoInput } from './dtos/inputs/create.input'
 import { UpdateTodoInput } from './dtos/inputs/update.input'
+import { StatusArgs } from './dtos/args/status.arg'
 
 @Resolver(() => Todo)
 export class TodoResolver {
   constructor(private readonly todoService: TodoService) {}
 
   @Query(() => [Todo], { name: 'todos' })
-  findAll(): Todo[] {
-    return this.todoService.findAll()
+  findAll(@Args() statusArgs: StatusArgs): Todo[] {
+    return this.todoService.findAll(statusArgs)
   }
 
   @Query(() => Todo, { name: 'todo' })
@@ -32,5 +33,10 @@ export class TodoResolver {
   @Mutation(() => Boolean, { name: 'deleteTodo' })
   delete(@Args('id', { type: () => Int }) id: number) {
     return this.todoService.delete(id)
+  }
+
+  @Query(() => Int, { name: 'countTodosByStatus' })
+  countTodosByStatus(@Args() statusArgs: StatusArgs): number {
+    return this.todoService.findAll(statusArgs).length
   }
 }
