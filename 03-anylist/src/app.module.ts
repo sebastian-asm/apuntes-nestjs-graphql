@@ -8,12 +8,14 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import 'dotenv/config'
 
 import { ItemsModule } from './items/items.module'
+import { UsersModule } from './users/users.module'
+import { AuthModule } from './auth/auth.module'
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,
@@ -30,7 +32,9 @@ const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env
       synchronize: true,
       autoLoadEntities: true
     }),
-    ItemsModule
+    ItemsModule,
+    UsersModule,
+    AuthModule
   ],
   controllers: [],
   providers: []

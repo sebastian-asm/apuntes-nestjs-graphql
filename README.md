@@ -22,3 +22,5 @@ Es un lenguaje para leer y mutar data mediante APIs (Query language). Permite de
 - **Fragment**: forma para reutilizar un conjunto de campos para luego utilizarlos en mútiples consultas o mutaciones.
 - **Mutations**: queries que se utilizan para modificar la información guardada y devolver un valor.
 - **Inputs**: lo que comúnmente se llama _"body"_ en un petición REST tradicional.
+
+Para saber cuando utilizar un _ObjectType_ o un _InputType_, básicamente depende de la petición, si es una mutación donde se espera información desde el frontend eso sería un _Input_, en cambio, los _Object_ están más relacionado con una respuesta de retorno personalizada.
