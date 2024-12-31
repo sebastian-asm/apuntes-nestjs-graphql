@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { hashSync } from 'bcrypt'
 
-import { CreateUserInput } from './dto/create-user.input'
-import { UpdateUserInput } from './dto/update-user.input'
+// import { CreateUserInput } from './dto/create-user.input'
+import { UpdateUserInput } from './dto/inputs/update-user.input'
 import { User } from './entities/user.entity'
 import { RegisterInput } from 'src/auth/dto/inputs/register.input'
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
@@ -55,8 +55,22 @@ export class UsersService {
     }
   }
 
-  block(id: string): Promise<User> {
-    throw new Error('Method not implemented.')
+  async block(id: string, adminUser: User): Promise<User> {
+    const user = await this.findOneById(id)
+    user.isActive = false
+    user.lastUpdatedBy = adminUser
+    await this.userRepository.save(user)
+    return user
+  }
+
+  async update(id: string, updateUserInput: UpdateUserInput, userAdmin: User): Promise<User> {
+    try {
+      const user = await this.userRepository.preload({ id, ...updateUserInput })
+      user.lastUpdatedBy = userAdmin
+      return await this.userRepository.save(user)
+    } catch (error) {
+      this.handleErrors(error)
+    }
   }
 
   // never indica que no retorna ningún valor

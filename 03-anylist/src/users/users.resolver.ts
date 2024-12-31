@@ -4,7 +4,7 @@ import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { User } from './entities/user.entity'
 // import { CreateUserInput } from './dto/create-user.input'
-// import { UpdateUserInput } from './dto/update-user.input'
+import { UpdateUserInput } from './dto/inputs/update-user.input'
 import { ValidRolesArgs } from './dto/args/roles.arg'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
@@ -33,13 +33,19 @@ export class UsersResolver {
     return this.usersService.findOneById(id)
   }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-  //   return this.usersService.update(updateUserInput.id, updateUserInput)
-  // }
+  @Mutation(() => User, { name: 'updateUser' })
+  updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @CurrentUser([ValidRoles.ADMIN]) userAdmin: User
+  ): Promise<User> {
+    return this.usersService.update(updateUserInput.id, updateUserInput, userAdmin)
+  }
 
-  @Mutation(() => User)
-  blockUser(@Args('id', { type: () => ID }) id: string): Promise<User> {
-    return this.usersService.block(id)
+  @Mutation(() => User, { name: 'blockUser' })
+  blockUser(
+    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+    @CurrentUser([ValidRoles.ADMIN]) user: User
+  ): Promise<User> {
+    return this.usersService.block(id, user)
   }
 }

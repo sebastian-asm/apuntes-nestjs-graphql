@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql'
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity({ name: 'users' })
 @ObjectType()
@@ -26,4 +26,11 @@ export class User {
   @Column({ type: 'boolean', default: true })
   @Field(() => Boolean)
   isActive: boolean
+
+  // lazy permite cargar la relación solo cuando se accede a ella
+  // https://orkhan.gitbook.io/typeorm/docs/eager-and-lazy-relations
+  @ManyToOne(() => User, (user) => user.lastUpdatedBy, { nullable: true, lazy: true })
+  @JoinColumn({ name: 'lastUpdatedBy' })
+  @Field(() => User, { nullable: true })
+  lastUpdatedBy?: User
 }
