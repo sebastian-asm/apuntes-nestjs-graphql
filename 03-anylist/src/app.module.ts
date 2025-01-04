@@ -10,6 +10,7 @@ import 'dotenv/config'
 import { ItemsModule } from './items/items.module'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
+import { SeedModule } from './seed/seed.module';
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env
 
@@ -34,7 +35,8 @@ const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env
     }),
     ItemsModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    SeedModule
   ],
   controllers: [],
   providers: []
