@@ -5,6 +5,7 @@ import { Repository } from 'typeorm'
 import { CreateItemInput } from './dto/inputs/create-item.input'
 import { UpdateItemInput } from './dto/inputs/update-item.input'
 import { Item } from './entities/item.entity'
+import { User } from 'src/users/entities/user.entity'
 
 @Injectable()
 export class ItemsService {
@@ -13,29 +14,41 @@ export class ItemsService {
     private readonly itemsRespository: Repository<Item>
   ) {}
 
-  async create(createItemInput: CreateItemInput): Promise<Item> {
-    const newItem = this.itemsRespository.create(createItemInput)
+  async create(createItemInput: CreateItemInput, user: User): Promise<Item> {
+    const newItem = this.itemsRespository.create({ ...createItemInput, user })
     return await this.itemsRespository.save(newItem)
   }
 
-  async findAll(): Promise<Item[]> {
-    return await this.itemsRespository.find()
+  async findAll(user: User): Promise<Item[]> {
+    const { id } = user
+    return await this.itemsRespository.find({ where: { user: { id } } })
   }
 
-  async findOne(id: string): Promise<Item> {
-    const item = await this.itemsRespository.findOneBy({ id })
+  async findOne(id: string, user: User): Promise<Item> {
+    const item = await this.itemsRespository.findOneBy({ id, user: { id: user.id } })
     if (!item) throw new NotFoundException('El item no existe')
     return item
   }
 
-  async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
-    const item = await this.findOne(id)
-    return await this.itemsRespository.save({ ...item, ...updateItemInput })
+  async update(id: string, updateItemInput: UpdateItemInput, user: User): Promise<Item> {
+    // versión 1
+    // await this.findOne(id, user)
+    // const item = await this.itemsRespository.preload(updateItemInput)
+    // if (!item) throw new NotFoundException('El item no existe')
+    // return await this.itemsRespository.save(item)
+
+    // versión 2
+    const item = await this.findOne(id, user)
+    return await this.itemsRespository.save({ ...item, ...updateItemInput, user })
   }
 
-  async remove(id: string): Promise<Item> {
-    const item = await this.findOne(id)
+  async remove(id: string, user: User): Promise<Item> {
+    const item = await this.findOne(id, user)
     await this.itemsRespository.remove(item)
     return { ...item, id }
+  }
+
+  async count(user: User): Promise<number> {
+    return await this.itemsRespository.count({ where: { user: { id: user.id } } })
   }
 }
