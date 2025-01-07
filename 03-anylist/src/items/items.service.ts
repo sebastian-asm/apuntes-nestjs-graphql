@@ -6,6 +6,8 @@ import { CreateItemInput } from './dto/inputs/create-item.input'
 import { UpdateItemInput } from './dto/inputs/update-item.input'
 import { Item } from './entities/item.entity'
 import { User } from 'src/users/entities/user.entity'
+import { PaginationArgs } from 'src/common/dtos/args/pagination.arg'
+import { SearchArgs } from 'src/common/dtos/args/search.arg'
 
 @Injectable()
 export class ItemsService {
@@ -19,9 +21,11 @@ export class ItemsService {
     return await this.itemsRespository.save(newItem)
   }
 
-  async findAll(user: User): Promise<Item[]> {
+  async findAll(user: User, pagination: PaginationArgs, search: SearchArgs): Promise<Item[]> {
     const { id } = user
-    return await this.itemsRespository.find({ where: { user: { id } } })
+    const { limit, offset } = pagination
+    console.log(search)
+    return await this.itemsRespository.find({ take: limit, skip: offset, where: { user: { id } } })
   }
 
   async findOne(id: string, user: User): Promise<Item> {
