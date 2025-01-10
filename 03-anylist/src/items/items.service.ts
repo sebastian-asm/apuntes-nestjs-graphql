@@ -24,8 +24,27 @@ export class ItemsService {
   async findAll(user: User, pagination: PaginationArgs, search: SearchArgs): Promise<Item[]> {
     const { id } = user
     const { limit, offset } = pagination
-    console.log(search)
-    return await this.itemsRespository.find({ take: limit, skip: offset, where: { user: { id } } })
+    const { query } = search
+
+    // versión 1
+    // return await this.itemsRespository.find({
+    //   take: limit,
+    //   skip: offset,
+    //   where: {
+    //     user: { id },
+    //     name: Like(`%${query?.toLowerCase()}%`)
+    //   }
+    // })
+
+    // versión 2
+    const queryBuilder = this.itemsRespository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      // el primer parámetro es el nombre de la columna
+      .where('"userId" = :id', { id })
+    if (query) queryBuilder.andWhere('LOWER(name) like :query', { query: `%${query.toLowerCase()}%` })
+    return queryBuilder.getMany()
   }
 
   async findOne(id: string, user: User): Promise<Item> {

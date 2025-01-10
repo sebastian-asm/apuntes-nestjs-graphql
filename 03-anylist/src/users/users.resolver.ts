@@ -3,23 +3,20 @@ import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
 
 import { UsersService } from './users.service'
 import { User } from './entities/user.entity'
-// import { CreateUserInput } from './dto/create-user.input'
 import { UpdateUserInput } from './dto/inputs/update-user.input'
 import { ValidRolesArgs } from './dto/args/roles.arg'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
 import { ItemsService } from 'src/items/items.service'
+import { Item } from 'src/items/entities/item.entity'
+import { PaginationArgs } from 'src/common/dtos/args/pagination.arg'
+import { SearchArgs } from 'src/common/dtos/args/search.arg'
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService, private readonly itemsService: ItemsService) {}
-
-  // @Mutation(() => User)
-  // createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-  //   return this.usersService.create(createUserInput)
-  // }
 
   @Query(() => [User], { name: 'users' })
   findAll(@Args() validRoles: ValidRolesArgs, @CurrentUser([ValidRoles.ADMIN]) user: User): Promise<User[]> {
@@ -54,5 +51,15 @@ export class UsersResolver {
   // @Parent() permite acceder a los datos del objeto padre
   itemsCount(@Parent() user: User, @CurrentUser([ValidRoles.ADMIN]) userAdmin: User): Promise<number> {
     return this.itemsService.count(user)
+  }
+
+  @ResolveField(() => [Item], { name: 'items' })
+  getItemsByUser(
+    @Parent() user: User,
+    @CurrentUser([ValidRoles.ADMIN]) userAdmin: User,
+    @Args() pagination: PaginationArgs,
+    @Args() search: SearchArgs
+  ): Promise<Item[]> {
+    return this.itemsService.findAll(user, pagination, search)
   }
 }

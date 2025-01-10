@@ -7,8 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true
+      whitelist: true
+      // si esta en true no permite usar mútiples @args() en los resolvers
+      // forbidNonWhitelisted: true
     })
   )
   await app.listen(3000)
