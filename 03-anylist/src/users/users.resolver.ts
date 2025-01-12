@@ -12,11 +12,17 @@ import { ItemsService } from 'src/items/items.service'
 import { Item } from 'src/items/entities/item.entity'
 import { PaginationArgs } from 'src/common/dtos/args/pagination.arg'
 import { SearchArgs } from 'src/common/dtos/args/search.arg'
+import { ListsService } from 'src/lists/lists.service'
+import { List } from 'src/lists/entities/list.entity'
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService, private readonly itemsService: ItemsService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly itemsService: ItemsService,
+    private readonly listsService: ListsService
+  ) {}
 
   @Query(() => [User], { name: 'users' })
   findAll(@Args() validRoles: ValidRolesArgs, @CurrentUser([ValidRoles.ADMIN]) user: User): Promise<User[]> {
@@ -61,5 +67,20 @@ export class UsersResolver {
     @Args() search: SearchArgs
   ): Promise<Item[]> {
     return this.itemsService.findAll(user, pagination, search)
+  }
+
+  @ResolveField(() => Int, { name: 'listsCount' })
+  listsCount(@Parent() user: User, @CurrentUser([ValidRoles.ADMIN]) userAdmin: User): Promise<number> {
+    return this.listsService.count(user)
+  }
+
+  @ResolveField(() => [List], { name: 'lists' })
+  getListsByUser(
+    @Parent() user: User,
+    @CurrentUser([ValidRoles.ADMIN]) userAdmin: User,
+    @Args() pagination: PaginationArgs,
+    @Args() search: SearchArgs
+  ): Promise<List[]> {
+    return this.listsService.findAll(user, pagination, search)
   }
 }
