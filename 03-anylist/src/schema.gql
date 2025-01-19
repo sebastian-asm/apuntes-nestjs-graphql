@@ -2,10 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  list: List!
+  item: Item!
+}
+
 type List {
   id: ID!
   name: String
   user: User!
+  items(offset: Int = 0, limit: Int = 10, query: String): [ListItem!]!
+  totalItems: Float!
 }
 
 type User {
@@ -26,6 +36,7 @@ type Item {
   name: String!
   quantityUnits: String
   user: User!
+  listItem: [ListItem!]!
 }
 
 type AuthResponse {
@@ -40,6 +51,7 @@ type Query {
   user(id: ID!): User!
   lists(offset: Int = 0, limit: Int = 10, query: String): [List!]!
   list(id: ID!): List!
+  listItem(id: ID!): ListItem!
   revalidateToken: AuthResponse!
 }
 
@@ -58,6 +70,8 @@ type Mutation {
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: ID!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
   register(registerInput: RegisterInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
   executeSeed: Boolean!
@@ -89,6 +103,21 @@ input CreateListInput {
 
 input UpdateListInput {
   name: String
+  id: ID!
+}
+
+input CreateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
+}
+
+input UpdateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID
+  itemId: ID
   id: ID!
 }
 

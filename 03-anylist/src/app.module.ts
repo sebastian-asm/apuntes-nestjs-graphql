@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module'
 import { SeedModule } from './seed/seed.module'
 import { CommonModule } from './common/common.module'
 import { ListsModule } from './lists/lists.module'
+import { ListItemModule } from './list-item/list-item.module';
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env
 
@@ -40,7 +41,8 @@ const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env
     AuthModule,
     SeedModule,
     CommonModule,
-    ListsModule
+    ListsModule,
+    ListItemModule
   ],
   controllers: [],
   providers: []
