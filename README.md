@@ -25,3 +25,7 @@ Es un lenguaje para leer y mutar data mediante APIs (Query language). Permite de
 - **Enums**: permite definir un conjunto de posibles valores para un campo.
 
 Para saber cuando utilizar un _ObjectType_ o un _InputType_, básicamente depende de la petición, si es una mutación donde se espera información desde el frontend eso sería un _Input_, en cambio, los _Object_ están más relacionado con una respuesta de retorno personalizada.
+
+**_Créditos_**
+
+👉 [https://cursos.devtalles.com/courses/nest-graphql](https://cursos.devtalles.com/courses/nest-graphql)
